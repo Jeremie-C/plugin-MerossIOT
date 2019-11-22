@@ -67,7 +67,7 @@ class JeedomCallback:
         return True
         
     def changeOnLine(self, uuid, status):
-        r = self.send_now({'action': 'online', 'uuid':uuid, 'status':status})
+        r = self.send({'action': 'online', 'uuid':uuid, 'status':status})
         # self.status = "online" "offline"
         if not r or not r.get('success'):
             logging.error('Erreur envoi Online à jeedom')
@@ -75,7 +75,7 @@ class JeedomCallback:
         return True
 
     def changeSwitchStatus(self, uuid, channel_id, switch_state):
-        r = self.send_now({'action': 'switch', 'uuid':uuid, 'channel':channel_id, 'status':int(switch_state)})
+        r = self.send({'action': 'switch', 'uuid':uuid, 'channel':channel_id, 'status':int(switch_state)})
         # True or False
         if not r or not r.get('success'):
             logging.error('Erreur envoi SwitchStatus à jeedom')
@@ -83,7 +83,7 @@ class JeedomCallback:
         return True
 
     def changeBulbStatus(self, uuid, channel_id, light_state):
-        r = self.send_now({'action': 'bulb', 'uuid':uuid, 'channel':channel_id, 'status':light_state})
+        r = self.send({'action': 'bulb', 'uuid':uuid, 'channel':channel_id, 'status':light_state})
         # light_state array
         if not r or not r.get('success'):
             logging.error('Erreur envoi BulbStatus à jeedom')
@@ -91,7 +91,7 @@ class JeedomCallback:
         return True
 
     def changeDoorStatus(self, uuid, channel_id, door_state):
-        r = self.send_now({'action': 'door', 'uuid':uuid, 'channel':channel_id, 'status':door_state})
+        r = self.send({'action': 'door', 'uuid':uuid, 'channel':channel_id, 'status':door_state})
         # open or closed
         if not r or not r.get('success'):
             logging.error('Erreur envoi DoorStatus à jeedom')
@@ -99,7 +99,7 @@ class JeedomCallback:
         return True
 
     def sendElectricity(self, electricity):
-        r = self.send_now({'action': 'electricity', 'values':electricity})
+        r = self.send({'action': 'electricity', 'values':electricity})
         if not r or not r.get('success'):
             logging.error('Erreur envoi Electricity à jeedom')
             return False
