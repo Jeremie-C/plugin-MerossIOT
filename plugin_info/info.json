@@ -12,6 +12,6 @@
   "maxDependancyInstallTime": 30,
   "documentation": "https://Jeremie-C.github.io/plugin-MerossIOT/#language#/",
   "changelog": "https://Jeremie-C.github.io/plugin-MerossIOT/#language#/changelog",
-  "language" : ["fr_FR", "en_EN", "es_ES"],
+  "language" : ["fr_FR", "en_EN", "es_ES", "de_DE"],
   "compatibility" : ["miniplus","smart","rpi","docker","diy"]
 }

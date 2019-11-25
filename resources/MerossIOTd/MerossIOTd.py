@@ -215,11 +215,13 @@ class JeedomHandler(socketserver.BaseRequestHandler):
             # Recup
             if len(l_conso) > 0:
                 d['values']['conso_totale'] = 0
+                today = datetime.today()
                 for c in l_conso:
-                    try:
-                        d['values']['conso_totale'] += float(c['value'] / 1000.)
-                    except:
-                        pass
+                    if c['date'] == today:
+                        try:
+                            d['values']['conso_totale'] = float(c['value'] / 1000.)
+                        except:
+                            pass
         else:
             d['conso'] = False
         # Lumiere
@@ -263,11 +265,13 @@ class JeedomHandler(socketserver.BaseRequestHandler):
                 # Recup
                 if len(l_conso) > 0:
                     d['conso_totale'] = 0
+                    today = datetime.today()
                     for c in l_conso:
-                        try:
-                            d['conso_totale'] += float(c['value'] / 1000.)
-                        except:
-                            pass
+                        if c['date'] == today:
+                            try:
+                                d['conso_totale'] = float(c['value'] / 1000.)
+                            except:
+                                pass
         return d
 
     def syncMeross(self):
