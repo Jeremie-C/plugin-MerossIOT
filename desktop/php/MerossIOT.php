@@ -123,7 +123,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                             </div>
                     	</div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">{{ Modèle }}</label>
+                            <label class="col-sm-3 control-label">{{Modèle}}</label>
                             <div class="col-sm-3">
                                 <span class="eqLogicAttr" data-l1key="configuration" data-l2key="type"></span>
                             </div>

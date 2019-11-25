@@ -28,7 +28,7 @@ $eqLogics = MerossIOT::byType('MerossIOT');
         <th>{{ID}}</th>
         <th>{{Modèle}}</th>
         <th>{{IP}}</th>
-        <th>{{Online}}</th>
+        <th>{{En ligne}}</th>
         <th>{{Date création}}</th>
         <th>{{Date dernière communication}}</th>
     </tr>
@@ -42,9 +42,9 @@ $eqLogics = MerossIOT::byType('MerossIOT');
         } else {
             $image = '<img src="' . $plugin->getPathImgIcon() . '" height="55" width="55" style="' . $opacity . '" />';
         }
-        $status = '<span class="label label-success" style="font-size : 1em;cursor:default;">{{OK}}</span>';
+        $status = '<span class="label label-success" style="font-size : 1em;cursor:default;">{{OUI}}</span>';
         if( $eqLogic->getConfiguration('online') != 1 ) {
-            $status = '<span class="label label-danger" style="font-size : 1em;cursor:default;">{{NOK}}</span>';
+            $status = '<span class="label label-danger" style="font-size : 1em;cursor:default;">{{NON}}</span>';
         }
         echo '<tr>';
         echo '<td>' . $image . '</td><td><a href="' . $eqLogic->getLinkToConfiguration() . '" style="text-decoration: none;">' . $eqLogic->getHumanName(true) . '</a></td>';

@@ -33,6 +33,8 @@ class JeedomCallback:
 
     def send(self, message):
         self.messages.append(message)
+        logging.debug('Nouveau message : {}'.format(message))
+        logging.debug('Nombre de messages : {}'.format(len(self.messages)))
 
     def send_now(self, message):
         return self._request(message)
@@ -65,45 +67,19 @@ class JeedomCallback:
             logging.error('Erreur envoi à jeedom')
             return False
         return True
-        
-    def changeOnLine(self, uuid, status):
-        r = self.send_now({'action': 'online', 'uuid':uuid, 'status':status})
-        # self.status = "online" "offline"
-        if not r or not r.get('success'):
-            logging.error('Erreur envoi Online à jeedom')
-            return False
-        return True
-
-    def changeSwitchStatus(self, uuid, channel_id, switch_state):
-        r = self.send_now({'action': 'switch', 'uuid':uuid, 'channel':channel_id, 'status':int(switch_state)})
-        # True or False
-        if not r or not r.get('success'):
-            logging.error('Erreur envoi SwitchStatus à jeedom')
-            return False
-        return True
-
-    def changeBulbStatus(self, uuid, channel_id, light_state):
-        r = self.send_now({'action': 'bulb', 'uuid':uuid, 'channel':channel_id, 'status':light_state})
-        # light_state array
-        if not r or not r.get('success'):
-            logging.error('Erreur envoi BulbStatus à jeedom')
-            return False
-        return True
-
-    def changeDoorStatus(self, uuid, channel_id, door_state):
-        r = self.send_now({'action': 'door', 'uuid':uuid, 'channel':channel_id, 'status':door_state})
-        # open or closed
-        if not r or not r.get('success'):
-            logging.error('Erreur envoi DoorStatus à jeedom')
-            return False
-        return True
-
-    def sendElectricity(self, electricity):
-        r = self.send_now({'action': 'electricity', 'values':electricity})
-        if not r or not r.get('success'):
-            logging.error('Erreur envoi Electricity à jeedom')
-            return False
-        return True        
+    
+    def event_handler(self, eventobj):
+        logging.debug("Event : {}".format(eventobj.event_type))
+        if eventobj.event_type == MerossEventType.DEVICE_SWITCH_STATUS:
+            self.send({'action': 'switch', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel_id, 'status':int(eventobj.switch_state)})
+        elif eventobj.event_type == MerossEventType.DEVICE_ONLINE_STATUS:
+            self.send({'action': 'online', 'uuid':eventobj.device.uuid, 'status':eventobj.status})
+        elif eventobj.event_type == MerossEventType.DEVICE_BULB_SWITCH_STATE:
+            self.send({'action': 'switch', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':int(eventobj.is_on)})
+        elif eventobj.event_type == MerossEventType.DEVICE_BULB_STATE:
+            self.send({'action': 'bulb', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':eventobj.light_state})
+        elif eventobj.event_type == MerossEventType.GARAGE_DOOR_STATUS:
+            self.send({'action': 'door', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':eventobj.door_state})
 
 # Reception de Jeedom ----------------------------------------------------------
 class JeedomHandler(socketserver.BaseRequestHandler):
@@ -239,11 +215,13 @@ class JeedomHandler(socketserver.BaseRequestHandler):
             # Recup
             if len(l_conso) > 0:
                 d['values']['conso_totale'] = 0
+                today = datetime.today()
                 for c in l_conso:
-                    try:
-                        d['values']['conso_totale'] += float(c['value'] / 1000.)
-                    except:
-                        pass
+                    if c['date'] == today:
+                        try:
+                            d['values']['conso_totale'] = float(c['value'] / 1000.)
+                        except:
+                            pass
         else:
             d['conso'] = False
         # Lumiere
@@ -287,11 +265,13 @@ class JeedomHandler(socketserver.BaseRequestHandler):
                 # Recup
                 if len(l_conso) > 0:
                     d['conso_totale'] = 0
+                    today = datetime.today()
                     for c in l_conso:
-                        try:
-                            d['conso_totale'] += float(c['value'] / 1000.)
-                        except:
-                            pass
+                        if c['date'] == today:
+                            try:
+                                d['conso_totale'] = float(c['value'] / 1000.)
+                            except:
+                                pass
         return d
 
     def syncMeross(self):
@@ -353,28 +333,6 @@ def shutdown():
         os.remove(_sockfile)
     logging.debug("Exit 0")
 
-def event_handler(eventobj):
-    #CLIENT_CONNECTION = 10
-    if eventobj.event_type == MerossEventType.DEVICE_ONLINE_STATUS:
-        jc.changeOnLine(eventobj.device.uuid, eventobj.status)
-        # self.status = "online" "offline"
-        pass
-    elif eventobj.event_type == MerossEventType.DEVICE_SWITCH_STATUS:
-        jc.changeSwitchStatus(eventobj.device.uuid, eventobj.channel_id, eventobj.switch_state)
-        # True or False
-        pass
-    elif eventobj.event_type == MerossEventType.DEVICE_BULB_SWITCH_STATE:
-        jc.changeSwitchStatus(eventobj.device.uuid, eventobj.channel, eventobj.is_on)
-        # True or False
-        pass
-    elif eventobj.event_type == MerossEventType.DEVICE_BULB_STATE:
-        jc.changeBulbStatus(eventobj.device.uuid, eventobj.channel, eventobj.light_state)
-        pass
-    elif eventobj.event_type == MerossEventType.GARAGE_DOOR_STATUS:
-        jc.changeDoorStatus(eventobj.device.uuid, eventobj.channel, eventobj.door_state)
-        # self.door_state = "open" "closed"
-        pass
-
 # ----------------------------------------------------------------------------
 def syncOneElectricity(device):
     d = dict({
@@ -409,7 +367,8 @@ def UpdateAllElectricity(interval):
                         e_devices[uuid] = d
                 # Fin du for
                 logging.info('Send Electricity')
-                jc.sendElectricity(e_devices)
+                #jc.sendElectricity(e_devices)
+                jc.send({'action': 'electricity', 'values':e_devices})
             except:
                 pass
     # fin de loop
@@ -466,7 +425,7 @@ logging.info('Démarrage Meross Manager')
 # Initiates the Meross Cloud Manager. This is in charge of handling the communication with the remote endpoint
 mm = MerossManager(args.muser, args.mpswd)
 # Register event handlers for the manager...
-mm.register_event_handler(event_handler)
+mm.register_event_handler(jc.event_handler)
 mm.start()
 # Thread for JeedomHandler
 t = threading.Thread(target=server.serve_forever)

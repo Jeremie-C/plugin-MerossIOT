@@ -1,7 +1,7 @@
 {
   "id" : "MerossIOT",
   "name": "Meross IOT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin pour contrôler les appareils MEROSS",
   "licence": "GPL",
   "author": "Jeremie-C",
@@ -12,6 +12,6 @@
   "maxDependancyInstallTime": 30,
   "documentation": "https://Jeremie-C.github.io/plugin-MerossIOT/#language#/",
   "changelog": "https://Jeremie-C.github.io/plugin-MerossIOT/#language#/changelog",
-  "language" : ["fr_FR", "en_EN", "es_ES"],
+  "language" : ["fr_FR", "en_EN", "es_ES", "de_DE"],
   "compatibility" : ["miniplus","smart","rpi","docker","diy"]
 }

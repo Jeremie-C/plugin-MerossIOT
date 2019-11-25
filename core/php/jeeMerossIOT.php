@@ -38,11 +38,11 @@ if( $action == 'online' ) {
             $eqLogic->setConfiguration('ip', '');
             $eqLogic->save();
             $humanName = $eqLogic->getHumanName();
-            message::add('MerossIOT', $humanName.' semble manquant, il a été désactivé.');
+            message::add('MerossIOT', $humanName.' '.__('semble manquant, il a été désactivé.', __FILE__));
         }
     } else {
         $uuid = $result['uuid'];
-        message::add('MerossIOT', 'Nouvel équipement Meross disponible: Merci de lancer une synchronisation.');
+        message::add('MerossIOT', __('Nouvel équipement Meross disponible: Merci de lancer une synchronisation.', __FILE__));
     }
 } elseif( $action == 'switch' ) {
     log::add('MerossIOT', 'debug', 'Traitement de '.$action);
@@ -61,7 +61,7 @@ if( $action == 'online' ) {
         }
     }
 } elseif( $action == 'bulb' ) {
-    log::add('MerossIOT', 'debug', 'Traitement de '.$action);
+    log::add('MerossIOT', 'debug', __('Traitement de ', __FILE__).$action);
     $eqLogic = eqLogic::byLogicalId($result['uuid'], 'MerossIOT');
     $data = $result['status'];
     if( is_object($eqLogic) ) {
@@ -73,7 +73,7 @@ if( $action == 'online' ) {
         log::add('MerossIOT', 'debug', 'RGB: '.'#'.substr('000000'.dechex($data['rgb']),-6));
     }
 } elseif( $action == 'electricity' ) {
-    log::add('MerossIOT', 'debug', 'Traitement de '.$action);
+    log::add('MerossIOT', 'debug', __('Traitement de ', __FILE__).$action);
     foreach( $result['values'] as $uuid=>$data ) {
         $eqLogic = eqLogic::byLogicalId($uuid, 'MerossIOT');
         if( is_object($eqLogic) ) {
