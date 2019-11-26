@@ -215,7 +215,7 @@ class JeedomHandler(socketserver.BaseRequestHandler):
             # Recup
             if len(l_conso) > 0:
                 d['values']['conso_totale'] = 0
-                today = datetime.today()
+                today = datetime.today().strftime("%Y-%m-%d")
                 for c in l_conso:
                     if c['date'] == today:
                         try:
@@ -256,22 +256,19 @@ class JeedomHandler(socketserver.BaseRequestHandler):
         d = dict({
             'conso_totale': 0
         })
-        if device.online:
-            if device.supports_consumption_reading():
-                try:
-                    l_conso = device.get_power_consumption()
-                except:
-                    l_conso = []
-                # Recup
-                if len(l_conso) > 0:
-                    d['conso_totale'] = 0
-                    today = datetime.today()
-                    for c in l_conso:
-                        if c['date'] == today:
-                            try:
-                                d['conso_totale'] = float(c['value'] / 1000.)
-                            except:
-                                pass
+        try:
+            l_conso = device.get_power_consumption()
+        except:
+            l_conso = []
+        # Recup
+        if len(l_conso) > 0:
+            today = datetime.today().strftime("%Y-%m-%d")
+            for c in l_conso:
+                if c['date'] == today:
+                    try:
+                        d['conso_totale'] = float(c['value'] / 1000.)
+                    except:
+                        pass
         return d
 
     def syncMeross(self):
@@ -296,9 +293,10 @@ class JeedomHandler(socketserver.BaseRequestHandler):
         devices = mm.get_supported_devices()
         for num in range(len(devices)):
             device = devices[num]
-            d = self.getMerossConso(device)
-            uuid = device.uuid
-            d_devices[uuid] = d
+            if device.online and device.supports_consumption_reading():
+                d = self.getMerossConso(device)
+                uuid = device.uuid
+                d_devices[uuid] = d
         return d_devices
 
 # Les fonctions du daemon ------------------------------------------------------

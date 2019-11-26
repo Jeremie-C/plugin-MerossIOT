@@ -25,7 +25,7 @@ class MerossIOT extends eqLogic {
     public static function cron10() {
         log::add('MerossIOT', 'debug', __('Mise à jour des consommations des équipements depuis le Cloud Meross', __FILE__));
         $results = self::callMeross('syncMerossConso');
-        foreach( $result['result'] as $uuid=>$data ) {
+        foreach( $results['result'] as $uuid=>$data ) {
             $eqLogic = MerossIOT::byLogicalId($uuid, 'MerossIOT');
             if( is_object($eqLogic) ) {
                 $eqLogic->checkAndUpdateCmd("conso_totale", $data['conso_totale']);
