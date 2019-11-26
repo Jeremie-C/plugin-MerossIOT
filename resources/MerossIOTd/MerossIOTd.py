@@ -67,7 +67,7 @@ class JeedomCallback:
             logging.error('Erreur envoi à jeedom')
             return False
         return True
-    
+
     def event_handler(self, eventobj):
         logging.debug("Event : {}".format(eventobj.event_type))
         if eventobj.event_type == MerossEventType.DEVICE_SWITCH_STATUS:
@@ -135,18 +135,18 @@ class JeedomHandler(socketserver.BaseRequestHandler):
         else:
             return 'Unknow device'
 
-    def setTemp(self, uuid, temp_int):
+    def setTemp(self, uuid, temp_int, lumi=-1):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
-            res = device.set_light_color(temperature=temp_int)
+            res = device.set_light_color(temperature=temp_int, luminance=lumi)
             return res
         else:
             return 'Unknow device'
 
-    def setRGB(self, uuid, rgb_int):
+    def setRGB(self, uuid, rgb_int, lumi=-1):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
-            res = device.set_light_color(rgb=int(rgb_int))
+            res = device.set_light_color(rgb=int(rgb_int), luminance=lumi)
             return res
         else:
             return 'Unknow device'
@@ -251,7 +251,7 @@ class JeedomHandler(socketserver.BaseRequestHandler):
             d['isrgb'] = False
         # Fini
         return d
-    
+
     def getMerossConso(self, device):
         d = dict({
             'conso_totale': 0

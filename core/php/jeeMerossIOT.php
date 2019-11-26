@@ -71,6 +71,13 @@ if( $action == 'online' ) {
         log::add('MerossIOT', 'debug', 'Temperature: '.$data['temperature']);
         $eqLogic->checkAndUpdateCmd("rgbval", '#'.substr('000000'.dechex($data['rgb']),-6));
         log::add('MerossIOT', 'debug', 'RGB: '.'#'.substr('000000'.dechex($data['rgb']),-6));
+        # Light Mode
+        if( $data['capacity'] == 1 || $data['capacity'] == 5 ) {
+            $eqLogic->checkAndUpdateCmd("capacity", __('Couleur', __FILE__));
+        } else {
+            $eqLogic->checkAndUpdateCmd("capacity", __('Blanc', __FILE__));
+        }
+        log::add('MerossIOT', 'debug', 'Capacity: '.$data['capacity']);
     }
 } elseif( $action == 'electricity' ) {
     log::add('MerossIOT', 'debug', __('Traitement de ', __FILE__).$action);

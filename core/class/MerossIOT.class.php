@@ -136,6 +136,16 @@ class MerossIOT extends eqLogic {
                     $_eqLogic->checkAndUpdateCmd('onoff_'.$id, $state);
                 }
             } else {
+                if( $key == "capacity" ) {
+                    if( $value == 1 || $value == 5 ) {
+                        $value = __('Couleur', __FILE__);
+                    } else {
+                        $value = __('Blanc', __FILE__);
+                    }
+                }
+                if( $key == "rgbval" ) {
+                    $value = '#'.substr('000000'.dechex($value),-6);
+                }
                 $_eqLogic->checkAndUpdateCmd($key, $value);
             }
         }
@@ -158,7 +168,7 @@ class MerossIOT extends eqLogic {
                 if (!is_object($cmd)) {
                     log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=on_'.$i);
                     $cmd = new MerossIOTCmd();
-                    $cmd->setIsVisible(true);
+                    $cmd->setIsVisible(1);
                     $cmd->setName($value.' '.__('Marche', __FILE__));
                     $cmd->setLogicalId('on_'.$i);
                     $cmd->setEqLogic_id($_eqLogic->getId());
@@ -177,7 +187,7 @@ class MerossIOT extends eqLogic {
                 if (!is_object($cmd)) {
                     log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=off_'.$i);
                     $cmd = new MerossIOTCmd();
-                    $cmd->setIsVisible(true);
+                    $cmd->setIsVisible(1);
                     $cmd->setName($value.' '.__('Arrêt', __FILE__));
                     $cmd->setLogicalId('off_'.$i);
                     $cmd->setEqLogic_id($_eqLogic->getId());
@@ -198,8 +208,8 @@ class MerossIOT extends eqLogic {
                 if (!is_object($cmd)) {
                     log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=onoff_'.$i);
                     $cmd = new MerossIOTCmd();
-                    $cmd->setIsVisible(false);
-                    $cmd->setIsHistorized(false);
+                    $cmd->setIsVisible(0);
+                    $cmd->setIsHistorized(0);
                     $cmd->setLogicalId('onoff_'.$i);
                     $cmd->setEqLogic_id($_eqLogic->getId());
                 } else {
@@ -224,7 +234,7 @@ class MerossIOT extends eqLogic {
                 if (!is_object($cmd)) {
                     log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=off_'.$i);
                     $cmd = new MerossIOTCmd();
-                    $cmd->setIsVisible(true);
+                    $cmd->setIsVisible(1);
                     $cmd->setName(__('Arrêt', __FILE__).' '.$i);
                     $cmd->setLogicalId('off_'.$i);
                     $cmd->setEqLogic_id($_eqLogic->getId());
@@ -256,7 +266,7 @@ class MerossIOT extends eqLogic {
                 if (!is_object($cmd)) {
                     log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=on_'.$i);
                     $cmd = new MerossIOTCmd();
-                    $cmd->setIsVisible(true);
+                    $cmd->setIsVisible(1);
                     $cmd->setName(__('Marche', __FILE__).' '.$i);
                     $cmd->setLogicalId('on_'.$i);
                     $cmd->setEqLogic_id($_eqLogic->getId());
@@ -292,7 +302,7 @@ class MerossIOT extends eqLogic {
             log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=refresh');
             $cmd = new MerossIOTCmd();
             $cmd->setName('Refresh');
-            $cmd->setIsVisible(true);
+            $cmd->setIsVisible(1);
             $cmd->setLogicalId('refresh');
             $cmd->setEqLogic_id($_eqLogic->getId());
         } else {
@@ -313,8 +323,8 @@ class MerossIOT extends eqLogic {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=power');
                 $cmd = new MerossIOTCmd();
                 $cmd->setName(__('Puissance', __FILE__));
-                $cmd->setIsVisible(true);
-                $cmd->setIsHistorized(true);
+                $cmd->setIsVisible(1);
+                $cmd->setIsHistorized(1);
                 $cmd->setEventOnly(1);
                 $cmd->setTemplate('dashboard', 'default');
                 $cmd->setTemplate('mobile', 'default');
@@ -338,8 +348,8 @@ class MerossIOT extends eqLogic {
                 log::add('merossiot', 'debug', 'syncMeross: - Add cmd=current');
                 $cmd = new MerossIOTCmd();
                 $cmd->setName(__('Courant', __FILE__));
-                $cmd->setIsVisible(true);
-                $cmd->setIsHistorized(true);
+                $cmd->setIsVisible(1);
+                $cmd->setIsHistorized(1);
                 $cmd->setEventOnly(1);
                 $cmd->setTemplate('dashboard', 'default');
                 $cmd->setTemplate('mobile', 'default');
@@ -363,8 +373,8 @@ class MerossIOT extends eqLogic {
                 log::add('merossiot', 'debug', 'syncMeross: - Add cmd=tension');
                 $cmd = new MerossIOTCmd();
                 $cmd->setName(__('Tension', __FILE__));
-                $cmd->setIsVisible(false);
-                $cmd->setIsHistorized(true);
+                $cmd->setIsVisible(1);
+                $cmd->setIsHistorized(1);
                 $cmd->setEventOnly(1);
                 $cmd->setTemplate('dashboard', 'default');
                 $cmd->setTemplate('mobile', 'default');
@@ -391,8 +401,8 @@ class MerossIOT extends eqLogic {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=conso_totale');
                 $cmd = new MerossIOTCmd();
                 $cmd->setName(__('Consommation', __FILE__));
-                $cmd->setIsVisible(true);
-                $cmd->setIsHistorized(true);
+                $cmd->setIsVisible(1);
+                $cmd->setIsHistorized(1);
                 $cmd->setEventOnly(1);
                 $cmd->setTemplate('dashboard', 'default');
                 $cmd->setTemplate('mobile', 'default');
@@ -417,8 +427,8 @@ class MerossIOT extends eqLogic {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=lumival');
                 $cmd = new MerossIOTCmd();
                 $cmd->setName('lumi');
-                $cmd->setIsVisible(false);
-                $cmd->setIsHistorized(false);
+                $cmd->setIsVisible(0);
+                $cmd->setIsHistorized(0);
                 $cmd->setLogicalId('lumival');
                 $cmd->setEqLogic_id($_eqLogic->getId());
             } else {
@@ -440,8 +450,8 @@ class MerossIOT extends eqLogic {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=lumiset');
                 $cmd = new MerossIOTCmd();
                 $cmd->setName(__('Luminosité', __FILE__));
-                $cmd->setIsVisible(true);
-                $cmd->setIsHistorized(false);
+                $cmd->setIsVisible(1);
+                $cmd->setIsHistorized(0);
                 $cmd->setLogicalId('lumiset');
                 $cmd->setTemplate('dashboard', 'light');
                 $cmd->setTemplate('mobile', 'light');
@@ -454,7 +464,6 @@ class MerossIOT extends eqLogic {
             $cmd->setGeneric_type('LIGHT_SLIDER');
             $cmd->setConfiguration('minValue', 1);
             $cmd->setConfiguration('maxValue', 100);
-            #$cmd->setConfiguration('value', $status_id);
             $cmd->setOrder($order);
             $cmd->save();
             $cmd->setValue($status_id);
@@ -468,8 +477,8 @@ class MerossIOT extends eqLogic {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=tempval');
                 $cmd = new MerossIOTCmd();
                 $cmd->setName('temp');
-                $cmd->setIsVisible(false);
-                $cmd->setIsHistorized(false);
+                $cmd->setIsVisible(0);
+                $cmd->setIsHistorized(0);
                 $cmd->setLogicalId('tempval');
                 $cmd->setEqLogic_id($_eqLogic->getId());
             } else {
@@ -490,8 +499,8 @@ class MerossIOT extends eqLogic {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=tempset');
                 $cmd = new MerossIOTCmd();
                 $cmd->setName(__('Température', __FILE__));
-                $cmd->setIsVisible(true);
-                $cmd->setIsHistorized(false);
+                $cmd->setIsVisible(1);
+                $cmd->setIsHistorized(0);
                 $cmd->setLogicalId('tempset');
                 $cmd->setTemplate('dashboard', 'light');
                 $cmd->setTemplate('mobile', 'light');
@@ -517,8 +526,8 @@ class MerossIOT extends eqLogic {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=rgbval');
                 $cmd = new MerossIOTCmd();
                 $cmd->setName('rgb');
-                $cmd->setIsVisible(false);
-                $cmd->setIsHistorized(false);
+                $cmd->setIsVisible(0);
+                $cmd->setIsHistorized(0);
                 $cmd->setLogicalId('rgbval');
                 $cmd->setEqLogic_id($_eqLogic->getId());
             } else {
@@ -537,8 +546,8 @@ class MerossIOT extends eqLogic {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=rgbset');
                 $cmd = new MerossIOTCmd();
                 $cmd->setName(__('Couleur', __FILE__));
-                $cmd->setIsVisible(true);
-                $cmd->setIsHistorized(false);
+                $cmd->setIsVisible(1);
+                $cmd->setIsHistorized(0);
                 $cmd->setTemplate('dashboard', 'default');
                 $cmd->setTemplate('mobile', 'default');
                 $cmd->setLogicalId('rgbset');
@@ -552,6 +561,31 @@ class MerossIOT extends eqLogic {
             $cmd->setOrder($order);
             $cmd->save();
             $cmd->setValue($status_id);
+            $cmd->save();
+            $order++;
+        }
+        # Light Mode
+        if( $_device['tempe'] && $_device['isrgb'] ) {
+            # information
+            $cmd = $_eqLogic->getCmd(null, 'capacity');
+            if (!is_object($cmd)) {
+                log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=capacity');
+                $cmd = new MerossIOTCmd();
+                $cmd->setName(__('Mode', __FILE__));
+                $cmd->setIsVisible(1);
+                $cmd->setIsHistorized(0);
+                $cmd->setEventOnly(1);
+                $cmd->setTemplate('dashboard', 'default');
+                $cmd->setTemplate('mobile', 'default');
+                $cmd->setLogicalId('capacity');
+                $cmd->setEqLogic_id($_eqLogic->getId());
+            } else {
+                log::add('merossiot', 'debug', 'syncMeross: - Update cmd=capacity');
+            }
+            $cmd->setType('info');
+            $cmd->setSubType('string');
+            $cmd->setGeneric_type('GENERIC_INFO');
+            $cmd->setOrder($order);
             $cmd->save();
         }
         log::add('MerossIOT', 'debug', 'updateEqLogicCmdVal: Update eqLogic informations Completed');
@@ -716,16 +750,20 @@ class MerossIOTCmd extends cmd {
                 break;
             case "lumiset":
                 $res = MerossIOT::callMeross('setLumi', [$eqLogic->getLogicalId(), $_options['slider']]);
-                log::add('merossiot', 'debug', 'setLumi '.$_options['slider'].': '.$res['result']);
+                log::add('MerossIOT', 'debug', 'setLumi '.$_options['slider'].': '.$res['result']);
                 break;
             case "tempset":
-                $res = MerossIOT::callMeross('setTemp', [$eqLogic->getLogicalId(), $_options['slider']]);
-                log::add('merossiot', 'debug', 'setTemp '.$_options['slider'].': '.$res['result']);
+                $cmd = $eqLogic->getCmd(null, 'lumival');
+                $lumi = $cmd->execCmd();
+                $res = MerossIOT::callMeross('setTemp', [$eqLogic->getLogicalId(), $_options['slider'], $lumi]);
+                log::add('MerossIOT', 'debug', 'setTemp '.$_options['slider'].': '.$res['result']);
                 break;
             case "rgbset":
+                $cmd = $eqLogic->getCmd(null, 'lumival');
+                $lumi = $cmd->execCmd();
                 $rgb = hexdec($_options['color']);
-                $res = MerossIOT::callMeross('setRGB', [$eqLogic->getLogicalId(), $rgb]);
-                log::add('merossiot', 'debug', 'setRGB '.$_options['color'].' ('.$rgb.'): '.$res['result']);
+                $res = MerossIOT::callMeross('setRGB', [$eqLogic->getLogicalId(), $rgb, $lumi]);
+                log::add('MerossIOT', 'debug', 'setRGB '.$_options['color'].' ('.$rgb.'): '.$res['result']);
                 break;
             case "refresh":
                 $res = MerossIOT::callMeross('syncDevice', [$eqLogic->getLogicalId()]);
