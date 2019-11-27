@@ -67,7 +67,7 @@ class JeedomCallback:
             logging.error('Erreur envoi à jeedom')
             return False
         return True
-    
+
     def event_handler(self, eventobj):
         logging.debug("Event : {}".format(eventobj.event_type))
         if eventobj.event_type == MerossEventType.DEVICE_SWITCH_STATUS:
@@ -135,18 +135,18 @@ class JeedomHandler(socketserver.BaseRequestHandler):
         else:
             return 'Unknow device'
 
-    def setTemp(self, uuid, temp_int):
+    def setTemp(self, uuid, temp_int, lumi=-1):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
-            res = device.set_light_color(temperature=temp_int)
+            res = device.set_light_color(temperature=temp_int, luminance=lumi)
             return res
         else:
             return 'Unknow device'
 
-    def setRGB(self, uuid, rgb_int):
+    def setRGB(self, uuid, rgb_int, lumi=-1):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
-            res = device.set_light_color(rgb=int(rgb_int))
+            res = device.set_light_color(rgb=int(rgb_int), luminance=lumi)
             return res
         else:
             return 'Unknow device'
@@ -215,7 +215,7 @@ class JeedomHandler(socketserver.BaseRequestHandler):
             # Recup
             if len(l_conso) > 0:
                 d['values']['conso_totale'] = 0
-                today = datetime.today()
+                today = datetime.today().strftime("%Y-%m-%d")
                 for c in l_conso:
                     if c['date'] == today:
                         try:
@@ -251,27 +251,24 @@ class JeedomHandler(socketserver.BaseRequestHandler):
             d['isrgb'] = False
         # Fini
         return d
-    
+
     def getMerossConso(self, device):
         d = dict({
             'conso_totale': 0
         })
-        if device.online:
-            if device.supports_consumption_reading():
-                try:
-                    l_conso = device.get_power_consumption()
-                except:
-                    l_conso = []
-                # Recup
-                if len(l_conso) > 0:
-                    d['conso_totale'] = 0
-                    today = datetime.today()
-                    for c in l_conso:
-                        if c['date'] == today:
-                            try:
-                                d['conso_totale'] = float(c['value'] / 1000.)
-                            except:
-                                pass
+        try:
+            l_conso = device.get_power_consumption()
+        except:
+            l_conso = []
+        # Recup
+        if len(l_conso) > 0:
+            today = datetime.today().strftime("%Y-%m-%d")
+            for c in l_conso:
+                if c['date'] == today:
+                    try:
+                        d['conso_totale'] = float(c['value'] / 1000.)
+                    except:
+                        pass
         return d
 
     def syncMeross(self):
@@ -296,9 +293,10 @@ class JeedomHandler(socketserver.BaseRequestHandler):
         devices = mm.get_supported_devices()
         for num in range(len(devices)):
             device = devices[num]
-            d = self.getMerossConso(device)
-            uuid = device.uuid
-            d_devices[uuid] = d
+            if device.online and device.supports_consumption_reading():
+                d = self.getMerossConso(device)
+                uuid = device.uuid
+                d_devices[uuid] = d
         return d_devices
 
 # Les fonctions du daemon ------------------------------------------------------
