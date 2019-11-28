@@ -71,3 +71,10 @@ Et en dessous vous pouvez consulter :
 b. Santé
 
 ![Sante](../images/5_Sante.png)
+
+Utilisation
+=========
+
+Il vous suffit de cliquer sur les fonctions des widgets
+
+![Utilisation](../images/6_Dashboard.png)
