@@ -169,12 +169,12 @@ class MerossIOT extends eqLogic {
                     log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=on_'.$i);
                     $cmd = new MerossIOTCmd();
                     $cmd->setIsVisible(1);
-                    $cmd->setName($value.' '.__('Marche', __FILE__));
                     $cmd->setLogicalId('on_'.$i);
                     $cmd->setEqLogic_id($_eqLogic->getId());
                 } else {
                     log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=on_'.$i);
                 }
+                $cmd->setName($value.' '.__('Marche', __FILE__));
                 $cmd->setType('action');
                 $cmd->setSubType('other');
                 $cmd->setTemplate('dashboard', 'default');
@@ -188,12 +188,12 @@ class MerossIOT extends eqLogic {
                     log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=off_'.$i);
                     $cmd = new MerossIOTCmd();
                     $cmd->setIsVisible(1);
-                    $cmd->setName($value.' '.__('Arrêt', __FILE__));
                     $cmd->setLogicalId('off_'.$i);
                     $cmd->setEqLogic_id($_eqLogic->getId());
                 } else {
                     log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=off_'.$i);
                 }
+                $cmd->setName($value.' '.__('Arrêt', __FILE__));
                 $cmd->setType('action');
                 $cmd->setSubType('other');
                 $cmd->setTemplate('dashboard', 'default');
