@@ -32,10 +32,12 @@ if( $action == 'online' ) {
     if( is_object($eqLogic) ) {
         if( $result['status'] == 'online' ) {
             $eqLogic->setIsEnable(1);
+            $eqLogic->setConfiguration('online', '1');
             $eqLogic->save();
         } else {
             $eqLogic->setIsEnable(0);
             $eqLogic->setConfiguration('ip', '');
+            $eqLogic->setConfiguration('online', '0');
             $eqLogic->save();
             $humanName = $eqLogic->getHumanName();
             message::add('MerossIOT', $humanName.' '.__('semble manquant, il a été désactivé.', __FILE__));
