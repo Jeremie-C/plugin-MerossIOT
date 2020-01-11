@@ -33,6 +33,13 @@ class MerossIOT extends eqLogic {
         }
         log::add('MerossIOT', 'debug', __('Mise à jour des consommations terminées.', __FILE__));
     }
+    /*
+     * Fonction exécutée automatiquement par Jeedom
+     */
+    public static function cronDaily() {
+        self::deamon_stop();
+        self::deamon_start();
+    }
     /**
      * Call the meross Python daemon.
      * @param  string $action Action calling.
