@@ -79,19 +79,16 @@ function addCmdToTable(_cmd) {
     tr += '      <input class="cmdAttr form-control input-sm" data-l1key="name">';
     tr += '    </div>';
     tr += '  </div>';
+    if (init(_cmd.type) == 'action'){
+        tr += '  <select class="cmdAttr form-control input-sm" data-l1key="value" style="display : none;margin-top : 5px;" title="{{La valeur de la commande vaut par défaut la commande}}">';
+        tr += '     <option value="">{{Aucune}}</option>';
+        tr += '  </select>';
+    }
     tr += '</td>';
     // Type
     tr += '<td>';
-    tr += '  <select class="cmdAttr form-control input-sm" data-l1key="value" style="display : none;margin-top : 5px;" title="{{La valeur de la commande vaut par défaut la commande}}">';
-    tr += '     <option value="">{{Aucune}}</option>';
-    tr += '  </select>';
     tr += '  <span class="type" type="' + init(_cmd.type) + '">' + jeedom.cmd.availableType() + '</span>';
     tr += '  <span class="subType" subType="' + init(_cmd.subType) + '"></span>';
-    if (init(_cmd.type) == 'action'){
-        tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value" placeholder="{{Commande}}" >';
-    }
-    tr += '  <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="returnStateValue" placeholder="{{Valeur retour d\'état}}" style="margin-top : 5px;">';
-    tr += '  <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="returnStateTime" placeholder="{{Durée avant retour d\'état (min)}}" style="margin-top : 5px;">';
     tr += '</td>';
     // Visible + Historized + Inverted
     // Unit + Min + Max
