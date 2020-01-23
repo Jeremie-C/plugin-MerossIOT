@@ -1,3 +1,15 @@
+# 11/01/2020
+
+- Nouvelle image d'appareils.
+- Modification affichage des commandes.
+- Déconnection - Connection tous les jours.
+
+# 10/01/2020
+
+- Correction mise à jour de l'IP
+- Synchronisation du nom quand mise à jour sur le cloud
+- Icone du plugin au bon format pour JEEDOM
+
 # 27/11/2019
 
 - Changement de catégorie du plugin
