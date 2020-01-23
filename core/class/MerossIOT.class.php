@@ -650,14 +650,22 @@ class MerossIOT extends eqLogic {
             throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
         }
         $user = config::byKey('MerossUSR', 'MerossIOT');
-        $pswd = config::byKey('MerossPWD', 'MerossIOT');
+        $pswd = quotemeta(config::byKey('MerossPWD', 'MerossIOT'));
         $updp = config::byKey('MerossUPD', 'MerossIOT');
+        if( is_int($updp) ) {
+            if( $updp < 5 ) {
+                $updp = 30;
+                log::add('MerossIOT','info',__('Cycle mise à jour puissance inférieur à 5 secondes.', __FILE__));
+            }
+        } else {
+            $updp = 30;
+        }
         $merossiot_path = realpath(dirname(__FILE__) . '/../../resources');
         $callback = network::getNetworkAccess('internal', 'proto:127.0.0.1:port:comp') . '/plugins/MerossIOT/core/php/jeeMerossIOT.php';
 
         $cmd = '/usr/bin/python3 ' . $merossiot_path . '/MerossIOTd/MerossIOTd.py';
-        $cmd.= ' --muser '.$user;
-        $cmd.= ' --mpswd '.$pswd;
+        $cmd.= ' --muser "'.$user.'"';
+        $cmd.= ' --mpswd "'.$pswd.'"';
         $cmd.= ' --mupdp '.$updp;
         $cmd.= ' --callback '.$callback;
         $cmd.= ' --apikey '.jeedom::getApiKey('MerossIOT');
