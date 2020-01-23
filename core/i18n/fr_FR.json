@@ -102,6 +102,7 @@
     "Démon meross lancé.": "Démon meross lancé.",
     "Impossible de stopper le démon meross, tuons le": "Impossible de stopper le démon meross, tuons le",
     "Veuillez (ré-)installer les dépendances": "Veuillez (ré-)installer les dépendances",
-    "non implementée.": "non implementée."
+    "non implementée.": "non implementée.",
+    "Cycle mise à jour puissance inférieur à 5 secondes.": "Cycle mise à jour puissance inférieur à 5 secondes."
   }
 }
