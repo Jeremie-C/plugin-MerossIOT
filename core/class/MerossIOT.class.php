@@ -651,7 +651,7 @@ class MerossIOT extends eqLogic {
         }
         $user = config::byKey('MerossUSR', 'MerossIOT');
         $pswd = quotemeta(config::byKey('MerossPWD', 'MerossIOT'));
-        $updp = config::byKey('MerossUPD', 'MerossIOT');
+        $updp = intval(config::byKey('MerossUPD', 'MerossIOT'));
         if( is_int($updp) ) {
             if( $updp < 5 ) {
                 $updp = 30;
