@@ -96,6 +96,8 @@
     "Couleur": "Couleur",
     "Mode": "Mode",
     "Blanc": "Blanc",
+    "Continu": "Continu",
+    "Intermittent": "Intermittent",
     "Veuillez vérifier la configuration": "Veuillez vérifier la configuration",
     "Lancement démon meross :": "Lancement démon meross :",
     "Impossible de lancer le démon meross, vérifiez le log": "Impossible de lancer le démon meross, vérifiez le log",

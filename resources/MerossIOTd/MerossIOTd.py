@@ -85,6 +85,9 @@ class JeedomCallback:
             self.send({'action': 'bulb', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':eventobj.light_state})
         elif eventobj.event_type == MerossEventType.GARAGE_DOOR_STATUS:
             self.send({'action': 'door', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':eventobj.door_state})
+        #HUMIDIFIER
+        elif eventobj.event_type == MerossEventType.HUMIDIFIER_LIGHT_EVENT:
+            self.send({'action': 'hlight', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':int(eventobj.is_on), 'rgb':eventobj.rgb, 'luminance':eventobj.luminance})
         #ADDITIONS
         elif eventobj.event_type == MerossEventType.CLIENT_CONNECTION:
             self.send({'action': 'connect', 'status':eventobj.status.value})
@@ -93,7 +96,6 @@ class JeedomCallback:
         elif eventobj.event_type == MerossEventType.DEVICE_UNBIND:
             self.send({'action': 'unbind', 'uuid':eventobj.device.uuid})        
         #elif eventobj.event_type == MerossEventType.HUMIDIFIER_SPRY_EVENT:
-        #elif eventobj.event_type == MerossEventType.HUMIDIFIER_LIGHT_EVENT:
         #elif eventobj.event_type == MerossEventType.THERMOSTAT_MODE_CHANGE:
         #elif eventobj.event_type == MerossEventType.THERMOSTAT_TEMPERATURE_CHANGE:
 
@@ -180,6 +182,14 @@ class JeedomHandler(socketserver.BaseRequestHandler):
         else:
             return 'Unknow device'
 
+    def setSpray(self, uuid, smode=0):
+        device = mm.get_device_by_uuid(uuid)
+        if device is not None:
+            res = device.set_spray_mode(spray_mode=smode)
+            return res
+        else:
+            return 'Unknow device'
+
     def syncOneMeross(self, device):
         d = dict({
             'name': device.name,
@@ -213,7 +223,10 @@ class JeedomHandler(socketserver.BaseRequestHandler):
                 digest = data['all']['digest']['togglex']
                 switch = [x['onoff'] for x in digest]
             except:
-                pass
+                try:
+                    switch = [device.get_light_state()['onoff']]
+                except:
+                    pass
         d['values']['switch'] = switch
         # IP
         try:
