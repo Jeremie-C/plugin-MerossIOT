@@ -595,6 +595,66 @@ class MerossIOT extends eqLogic {
             $cmd->setOrder($order);
             $cmd->save();
         }
+        # Spray Mode
+        if( $_device['spray'] ) {
+            # Spray OFF
+            $cmd = $_eqLogic->getCmd(null, 'spray_0');
+            if (!is_object($cmd)) {
+                log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=spray_0');
+                $cmd = new MerossIOTCmd();
+                $cmd->setType('action');
+                $cmd->setSubType('other');
+                $cmd->setTemplate('dashboard', 'default');
+                $cmd->setTemplate('mobile', 'default');
+                $cmd->setIsVisible(1);
+                $cmd->setLogicalId('spray_0');
+                $cmd->setEqLogic_id($_eqLogic->getId());
+                $cmd->setName($value.' '.__('Arrêt', __FILE__));
+            } else {
+                log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=spray_0');
+            }
+            $cmd->setOrder($order);
+            $cmd->save();
+            $order++;
+            # Spray continue
+            $cmd = $_eqLogic->getCmd(null, 'spray_1');
+            if (!is_object($cmd)) {
+                log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=spray_1');
+                $cmd = new MerossIOTCmd();
+                $cmd->setType('action');
+                $cmd->setSubType('other');
+                $cmd->setTemplate('dashboard', 'default');
+                $cmd->setTemplate('mobile', 'default');
+                $cmd->setIsVisible(1);
+                $cmd->setLogicalId('spray_1');
+                $cmd->setEqLogic_id($_eqLogic->getId());
+                $cmd->setName($value.' '.__('Continu', __FILE__));
+            } else {
+                log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=spray_1');
+            }
+            $cmd->setOrder($order);
+            $cmd->save();
+            $order++;
+            # Spray intermitent
+            $cmd = $_eqLogic->getCmd(null, 'spray_2');
+            if (!is_object($cmd)) {
+                log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=spray_2');
+                $cmd = new MerossIOTCmd();
+                $cmd->setType('action');
+                $cmd->setSubType('other');
+                $cmd->setTemplate('dashboard', 'default');
+                $cmd->setTemplate('mobile', 'default');
+                $cmd->setIsVisible(1);
+                $cmd->setLogicalId('spray_2');
+                $cmd->setEqLogic_id($_eqLogic->getId());
+                $cmd->setName($value.' '.__('Intermittent', __FILE__));
+            } else {
+                log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=spray_2');
+            }
+            $cmd->setOrder($order);
+            $cmd->save();
+            $order++;
+        }
         log::add('MerossIOT', 'debug', 'updateEqLogicCmdVal: Update eqLogic informations Completed');
     }
     /**
@@ -756,11 +816,11 @@ class MerossIOTCmd extends cmd {
         $channel = $splitAction[1];
         switch ($action) {
             case "on":
-                $res = MerossIOT::callMeross('setOn', [$eqLogic->getLogicalId(), $splitAction[1]]);
+                $res = MerossIOT::callMeross('setOn', [$eqLogic->getLogicalId(), $channel]);
                 log::add('MerossIOT', 'debug', 'setOn: '.json_encode($res['result']));
                 break;
             case "off":
-                $res = MerossIOT::callMeross('setOff', [$eqLogic->getLogicalId(), $splitAction[1]]);
+                $res = MerossIOT::callMeross('setOff', [$eqLogic->getLogicalId(), $channel]);
                 log::add('MerossIOT', 'debug', 'setOff: '.json_encode($res['result']));
                 break;
             case "lumiset":
@@ -779,6 +839,10 @@ class MerossIOTCmd extends cmd {
                 $rgb = hexdec($_options['color']);
                 $res = MerossIOT::callMeross('setRGB', [$eqLogic->getLogicalId(), $rgb, $lumi]);
                 log::add('MerossIOT', 'debug', 'setRGB '.$_options['color'].' ('.$rgb.'): '.$res['result']);
+                break;
+            case "spray":
+                $res = MerossIOT::callMeross('setSpray', [$eqLogic->getLogicalId(), $channel]);
+                log::add('MerossIOT', 'debug', 'setSpray: '.json_encode($res['result']));
                 break;
             case "refresh":
                 $res = MerossIOT::callMeross('syncDevice', [$eqLogic->getLogicalId()]);

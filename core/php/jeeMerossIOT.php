@@ -31,15 +31,11 @@ if( $action == 'online' ) {
     $eqLogic = eqLogic::byLogicalId($result['uuid'], 'MerossIOT');
     if( is_object($eqLogic) ) {
         if( $result['status'] == 'online' ) {
-            $eqLogic->setIsEnable(1);
-            $eqLogic->setStatus('state', 'ok');
-            $eqLogic->setStatus('timeout', 0);
+            $eqLogic->setStatus('warning', 0);
             $eqLogic->setConfiguration('online', '1');
             $eqLogic->save();
         } else {
-            $eqLogic->setIsEnable(0);
-            $eqLogic->setStatus('state', 'nok');
-            $eqLogic->setStatus('timeout', 1);
+            $eqLogic->setStatus('warning', 1);
             $eqLogic->setConfiguration('ip', '');
             $eqLogic->setConfiguration('online', '0');
             $eqLogic->save();
@@ -95,11 +91,22 @@ if( $action == 'online' ) {
             $eqLogic->checkAndUpdateCmd("tension", $data['voltage']);
         }
     }
+} elseif( $action == 'hlight' ) {
+    log::add('MerossIOT', 'debug', __('Traitement de ', __FILE__).$action);
+    $eqLogic = eqLogic::byLogicalId($result['uuid'], 'MerossIOT');
+    if( is_object($eqLogic) ) {
+        $eqLogic->checkAndUpdateCmd("onoff_".$result['channel'], $result['status']);
+        log::add('MerossIOT', 'debug', 'Light: '.$result['status']);
+        $eqLogic->checkAndUpdateCmd("lumival", $result['luminance']);
+        log::add('MerossIOT', 'debug', 'Luminance: '.$result['luminance']);
+        $eqLogic->checkAndUpdateCmd("rgbval", '#'.substr('000000'.dechex($result['rgb']),-6));
+        log::add('MerossIOT', 'debug', 'RGB: '.'#'.substr('000000'.dechex($result['rgb']),-6));
+    }
 } elseif( $action == 'connect' ) {
-    log::add('MerossDev', 'info', 'CONNECT: '.$result['status']);
+    log::add('MerossIOT', 'info', 'CONNECT: '.$result['status']);
 } elseif( $action == 'bind' ) {
-    log::add('MerossDev', 'info', $result['uuid'].' Bind: '.$result['data']);
+    log::add('MerossIOT', 'info', $result['uuid'].' Bind: '.$result['data']);
 } elseif( $action == 'unbind' ) {
-    log::add('MerossDev', 'info', $result['uuid'].' Unbind');
+    log::add('MerossIOT', 'info', $result['uuid'].' Unbind');
 }
 echo json_encode($response);
