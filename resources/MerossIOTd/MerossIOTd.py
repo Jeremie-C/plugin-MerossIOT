@@ -126,6 +126,8 @@ class JeedomHandler(socketserver.BaseRequestHandler):
         if device is not None:
             if str(device.__class__.__name__) == 'GenericGarageDoorOpener':
                 res = device.close_door(channel=int(channel))
+            elif str(device.__class__.__name__) == 'GenericHumidifier':
+                res = device.turn_on_light()
             else:
                 res = device.turn_on_channel(int(channel))
             return res
@@ -137,6 +139,8 @@ class JeedomHandler(socketserver.BaseRequestHandler):
         if device is not None:
             if str(device.__class__.__name__) == 'GenericGarageDoorOpener':
                 res = device.open_door(channel=int(channel))
+            elif str(device.__class__.__name__) == 'GenericHumidifier':
+                res = device.turn_off_light()
             else:
                 res = device.turn_off_channel(int(channel))
             return res
@@ -146,7 +150,10 @@ class JeedomHandler(socketserver.BaseRequestHandler):
     def setLumi(self, uuid, lumi_int):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
-            res = device.set_light_color(luminance=lumi_int)
+            if str(device.__class__.__name__) == 'GenericHumidifier':
+                res = device.configure_light(luminance=lumi_int)
+            else:
+                res = device.set_light_color(luminance=lumi_int)
             return res
         else:
             return 'Unknow device'
@@ -154,7 +161,10 @@ class JeedomHandler(socketserver.BaseRequestHandler):
     def setTemp(self, uuid, temp_int, lumi=-1):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
-            res = device.set_light_color(temperature=temp_int, luminance=lumi)
+            if str(device.__class__.__name__) == 'GenericHumidifier':
+                res = device.configure_light(temperature=temp_int, luminance=lumi)
+            else:
+                res = device.set_light_color(temperature=temp_int, luminance=lumi)
             return res
         else:
             return 'Unknow device'
@@ -162,7 +172,10 @@ class JeedomHandler(socketserver.BaseRequestHandler):
     def setRGB(self, uuid, rgb_int, lumi=-1):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
-            res = device.set_light_color(rgb=int(rgb_int), luminance=lumi)
+            if str(device.__class__.__name__) == 'GenericHumidifier':
+                res = device.configure_light(rgb=int(rgb_int), luminance=lumi)
+            else:
+                res = device.set_light_color(rgb=int(rgb_int), luminance=lumi)
             return res
         else:
             return 'Unknow device'
