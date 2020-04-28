@@ -16,6 +16,9 @@ from meross_iot.meross_event import MerossEventType
 from meross_iot.cloud.devices.light_bulbs import GenericBulb
 from meross_iot.cloud.devices.power_plugs import GenericPlug
 from meross_iot.cloud.devices.door_openers import GenericGarageDoorOpener
+from meross_iot.cloud.devices.humidifier import GenericHumidifier, SprayMode
+from meross_iot.cloud.devices.hubs import GenericHub
+from meross_iot.cloud.devices.subdevices.thermostats import ValveSubDevice, ThermostatV3Mode
 
 # Envoi vers Jeedom ------------------------------------------------------------
 class JeedomCallback:
@@ -80,6 +83,17 @@ class JeedomCallback:
             self.send({'action': 'bulb', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':eventobj.light_state})
         elif eventobj.event_type == MerossEventType.GARAGE_DOOR_STATUS:
             self.send({'action': 'door', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':eventobj.door_state})
+        #ADDITIONS
+        elif eventobj.event_type == MerossEventType.CLIENT_CONNECTION:
+            self.send({'action': 'connect', 'status':eventobj.status.value})
+        elif eventobj.event_type == MerossEventType.DEVICE_BIND:
+            self.send({'action': 'bind', 'uuid':eventobj.device.uuid, 'data':eventobj.bind_data})
+        elif eventobj.event_type == MerossEventType.DEVICE_UNBIND:
+            self.send({'action': 'unbind', 'uuid':eventobj.device.uuid})        
+        #elif eventobj.event_type == MerossEventType.HUMIDIFIER_SPRY_EVENT:
+        #elif eventobj.event_type == MerossEventType.HUMIDIFIER_LIGHT_EVENT:
+        #elif eventobj.event_type == MerossEventType.THERMOSTAT_MODE_CHANGE:
+        #elif eventobj.event_type == MerossEventType.THERMOSTAT_TEMPERATURE_CHANGE:
 
 # Reception de Jeedom ----------------------------------------------------------
 class JeedomHandler(socketserver.BaseRequestHandler):
