@@ -1,3 +1,8 @@
+# 23/01/2020
+
+- Correction bug d'identification avec caractère spécial
+- Ne perd plus le widget perso lors d'une synchronisation 
+
 # 11/01/2020
 
 - Nouvelle image d'appareils.
