@@ -20,6 +20,8 @@ from meross_iot.cloud.devices.humidifier import GenericHumidifier, SprayMode
 from meross_iot.cloud.devices.hubs import GenericHub
 from meross_iot.cloud.devices.subdevices.thermostats import ValveSubDevice, ThermostatV3Mode
 
+from meross_iot.cloud.devices.light_bulbs import MODE_RGB, MODE_LUMINANCE, MODE_TEMPERATURE
+
 # Envoi vers Jeedom ------------------------------------------------------------
 class JeedomCallback:
     def __init__(self, apikey, url):
@@ -242,27 +244,27 @@ class JeedomHandler(socketserver.BaseRequestHandler):
         if device.supports_light_control():
             d['light'] = True
             digest = data['all']['digest']['light']
-            if device.supports_luminance():
-                d['lumin'] = True
+            d['lumin'] = device.supports_mode(MODE_LUMINANCE)
+            d['tempe'] = device.supports_mode(MODE_TEMPERATURE)
+            d['isrgb'] = device.supports_mode(MODE_RGB)
+            if d['lumin']:
                 d['values']['lumival'] = digest['luminance']
-            else:
-                d['lumin'] = False
-            if device.is_light_temperature():
-                d['tempe'] = True
+            if d['tempe']:
                 d['values']['tempval'] = digest['temperature']
-            else:
-                d['tempe'] = False
-            if device.is_rgb():
-                d['isrgb'] = True
+            if d['isrgb']:
                 d['values']['rgbval'] = digest['rgb']
-            else:
-                d['isrgb'] = False
             d['values']['capacity'] = digest['capacity']
         else:
             d['light'] = False
             d['lumin'] = False
             d['tempe'] = False
             d['isrgb'] = False
+        # HUMIDIFIER
+        if d['famille'] == "GenericHumidifier":
+            d['spray'] = True
+            d['values']['spray'] = device.get_spray_mode().value
+        else:
+            d['spray'] = False
         # Fini
         return d
 
@@ -435,7 +437,7 @@ if os.path.exists(args.socket):
 server = socketserver.UnixStreamServer(args.socket, JeedomHandler)
 logging.info('Démarrage Meross Manager')
 # Initiates the Meross Cloud Manager. This is in charge of handling the communication with the remote endpoint
-mm = MerossManager(args.muser, args.mpswd)
+mm = MerossManager.from_email_and_password(args.muser, args.mpswd)
 # Register event handlers for the manager...
 mm.register_event_handler(jc.event_handler)
 mm.start()
