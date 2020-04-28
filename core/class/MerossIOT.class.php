@@ -339,13 +339,13 @@ class MerossIOT extends eqLogic {
                 $cmd->setTemplate('dashboard', 'default');
                 $cmd->setTemplate('mobile', 'default');
                 $cmd->setLogicalId('power');
+                $cmd->setConfiguration('minValue', 0);
+                $cmd->setConfiguration('maxValue', 4000);
+                $cmd->setUnite('W');
                 $cmd->setEqLogic_id($_eqLogic->getId());
             } else {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=power');
             }
-            $cmd->setConfiguration('minValue', 0);
-            $cmd->setConfiguration('maxValue', 4000);
-            $cmd->setUnite('W');
             $cmd->setOrder($order);
             $cmd->save();
             $order++;
@@ -363,14 +363,14 @@ class MerossIOT extends eqLogic {
                 $cmd->setTemplate('dashboard', 'default');
                 $cmd->setTemplate('mobile', 'default');
                 $cmd->setLogicalId('current');
+                $cmd->setGeneric_type('GENERIC_INFO');
+                $cmd->setConfiguration('minValue', 0);
+                $cmd->setConfiguration('maxValue', 17);
+                $cmd->setUnite('A');
                 $cmd->setEqLogic_id($_eqLogic->getId());
             } else {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=current');
             }
-            $cmd->setGeneric_type('GENERIC_INFO');
-            $cmd->setConfiguration('minValue', 0);
-            $cmd->setConfiguration('maxValue', 17);
-            $cmd->setUnite('A');
             $cmd->setOrder($order);
             $cmd->save();
             $order++;
@@ -389,13 +389,13 @@ class MerossIOT extends eqLogic {
                 $cmd->setTemplate('dashboard', 'default');
                 $cmd->setTemplate('mobile', 'default');
                 $cmd->setLogicalId('tension');
+                $cmd->setConfiguration('minValue', 0);
+                $cmd->setConfiguration('maxValue', 250);
+                $cmd->setUnite('V');
                 $cmd->setEqLogic_id($_eqLogic->getId());
             } else {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=tension');
             }
-            $cmd->setConfiguration('minValue', 0);
-            $cmd->setConfiguration('maxValue', 250);
-            $cmd->setUnite('V');
             $cmd->setOrder($order);
             $cmd->save();
             $order++;
@@ -417,11 +417,11 @@ class MerossIOT extends eqLogic {
                 $cmd->setTemplate('dashboard', 'default');
                 $cmd->setTemplate('mobile', 'default');
                 $cmd->setLogicalId('conso_totale');
+                $cmd->setUnite('kWh');
                 $cmd->setEqLogic_id($_eqLogic->getId());
             } else {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=conso_totale');
             }
-            $cmd->setUnite('kWh');
             $cmd->setOrder($order);
             $cmd->save();
             $order++;
