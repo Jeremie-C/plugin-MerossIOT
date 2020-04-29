@@ -594,6 +594,7 @@ class MerossIOT extends eqLogic {
             }
             $cmd->setOrder($order);
             $cmd->save();
+            $order++;
         }
         # Spray Mode
         if( $_device['spray'] ) {
@@ -609,7 +610,7 @@ class MerossIOT extends eqLogic {
                 $cmd->setIsVisible(1);
                 $cmd->setLogicalId('spray_0');
                 $cmd->setEqLogic_id($_eqLogic->getId());
-                $cmd->setName($value.' '.__('Arrêt', __FILE__));
+                $cmd->setName(__('Arrêt', __FILE__));
             } else {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=spray_0');
             }
@@ -628,7 +629,7 @@ class MerossIOT extends eqLogic {
                 $cmd->setIsVisible(1);
                 $cmd->setLogicalId('spray_1');
                 $cmd->setEqLogic_id($_eqLogic->getId());
-                $cmd->setName($value.' '.__('Continu', __FILE__));
+                $cmd->setName(__('Continu', __FILE__));
             } else {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=spray_1');
             }
@@ -647,7 +648,7 @@ class MerossIOT extends eqLogic {
                 $cmd->setIsVisible(1);
                 $cmd->setLogicalId('spray_2');
                 $cmd->setEqLogic_id($_eqLogic->getId());
-                $cmd->setName($value.' '.__('Intermittent', __FILE__));
+                $cmd->setName(__('Intermittent', __FILE__));
             } else {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=spray_2');
             }
