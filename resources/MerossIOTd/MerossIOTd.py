@@ -20,7 +20,7 @@ from meross_iot.cloud.devices.humidifier import GenericHumidifier, SprayMode
 from meross_iot.cloud.devices.hubs import GenericHub
 from meross_iot.cloud.devices.subdevices.thermostats import ValveSubDevice, ThermostatV3Mode
 
-from meross_iot.cloud.devices.light_bulbs import MODE_RGB, MODE_LUMINANCE, MODE_TEMPERATURE
+from meross_iot.cloud.devices.light_bulbs import MODE_RGB, MODE_LUMINANCE, MODE_TEMPERATURE, to_rgb
 
 # Envoi vers Jeedom ------------------------------------------------------------
 class JeedomCallback:
@@ -87,7 +87,7 @@ class JeedomCallback:
             self.send({'action': 'door', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':eventobj.door_state})
         #HUMIDIFIER
         elif eventobj.event_type == MerossEventType.HUMIDIFIER_LIGHT_EVENT:
-            self.send({'action': 'hlight', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':int(eventobj.is_on), 'rgb':eventobj.rgb, 'luminance':eventobj.luminance})
+            self.send({'action': 'hlight', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':int(eventobj.is_on), 'rgb':int(to_rgb(eventobj.rgb)), 'luminance':eventobj.luminance})
         #ADDITIONS
         elif eventobj.event_type == MerossEventType.CLIENT_CONNECTION:
             self.send({'action': 'connect', 'status':eventobj.status.value})
@@ -185,7 +185,12 @@ class JeedomHandler(socketserver.BaseRequestHandler):
     def setSpray(self, uuid, smode=0):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
-            res = device.set_spray_mode(spray_mode=smode)
+            if smode == 1:
+                res = device.set_spray_mode(spray_mode=SprayMode.CONTINUOUS)
+            elif smode == 2:
+                res = device.set_spray_mode(spray_mode=SprayMode.INTERMITTENT)
+            else:
+                res = device.set_spray_mode(spray_mode=SprayMode.OFF)
             return res
         else:
             return 'Unknow device'
