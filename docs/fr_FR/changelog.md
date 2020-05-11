@@ -1,3 +1,17 @@
+# 11/05/2020
+
+- Ajout du support de l'humidificateur
+- Reconnection automatique au cloud Meross
+- Nouvelle image d'appareils.
+
+# 28/04/2020
+
+- Le refresh d'un équipement n'enlève plus les modifications locales
+
+# 02/03/2020
+
+- Correction bug sur le cycle de mise à jour des puissances
+
 # 23/01/2020
 
 - Correction bug d'identification avec caractère spécial
