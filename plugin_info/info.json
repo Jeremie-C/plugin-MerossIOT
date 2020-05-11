@@ -1,7 +1,7 @@
 {
   "id" : "MerossIOT",
   "name": "Meross IOT",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Plugin pour contrôler les appareils MEROSS",
   "licence": "GPL",
   "author": "Jeremie-C",

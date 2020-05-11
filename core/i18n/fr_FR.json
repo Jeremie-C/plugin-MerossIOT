@@ -74,7 +74,10 @@
     "Vous n\'êtes pas autorisé à effectuer cette action": "Vous n\'êtes pas autorisé à effectuer cette action",
     "semble manquant, il a été désactivé.": "semble manquant, il a été désactivé.",
     "Nouvel équipement Meross disponible: Merci de lancer une synchronisation.": "Nouvel équipement Meross disponible: Merci de lancer une synchronisation.",
-    "Traitement de ": "Traitement de "
+    "Traitement de ": "Traitement de ",
+    "Continu": "Continu",
+    "Intermittent": "Intermittent",
+    "Arrêt": "Arrêt"
   },
   "plugins\/MerossIOT\/core\/class\/MerossIOT.class.php": {
     "Mise à jour des consommations des équipements depuis le Cloud Meross": "Mise à jour des consommations des équipements depuis le Cloud Meross",
@@ -96,6 +99,8 @@
     "Couleur": "Couleur",
     "Mode": "Mode",
     "Blanc": "Blanc",
+    "Continu": "Continu",
+    "Intermittent": "Intermittent",
     "Veuillez vérifier la configuration": "Veuillez vérifier la configuration",
     "Lancement démon meross :": "Lancement démon meross :",
     "Impossible de lancer le démon meross, vérifiez le log": "Impossible de lancer le démon meross, vérifiez le log",
