@@ -105,9 +105,9 @@ if( $action == 'online' ) {
 } elseif( $action == 'hspray') {
     log::add('MerossIOT', 'debug', __('Traitement de ', __FILE__).$action);
     $eqLogic = eqLogic::byLogicalId($result['uuid'], 'MerossIOT');
-    if( $data['status'] == 1 ) {
+    if( $result['status'] == 1 ) {
         $eqLogic->checkAndUpdateCmd("spray", __('Continu', __FILE__));
-    } elseif( $data['status'] == 2 ) {
+    } elseif( $result['status'] == 2 ) {
         $eqLogic->checkAndUpdateCmd("spray", __('Intermittent', __FILE__));
     } else {
         $eqLogic->checkAndUpdateCmd("spray", __('Arrêt', __FILE__));
