@@ -102,6 +102,16 @@ if( $action == 'online' ) {
         $eqLogic->checkAndUpdateCmd("rgbval", '#'.substr('000000'.dechex($result['rgb']),-6));
         log::add('MerossIOT', 'debug', 'RGB: '.'#'.substr('000000'.dechex($result['rgb']),-6));
     }
+} elseif( $action == 'hspray') {
+    log::add('MerossIOT', 'debug', __('Traitement de ', __FILE__).$action);
+    $eqLogic = eqLogic::byLogicalId($result['uuid'], 'MerossIOT');
+    if( $data['status'] == 1 ) {
+        $eqLogic->checkAndUpdateCmd("spray", __('Continu', __FILE__));
+    } elseif( $data['status'] == 2 ) {
+        $eqLogic->checkAndUpdateCmd("spray", __('Intermittent', __FILE__));
+    } else {
+        $eqLogic->checkAndUpdateCmd("spray", __('Arrêt', __FILE__));
+    }
 } elseif( $action == 'connect' ) {
     log::add('MerossIOT', 'info', 'CONNECT: '.$result['status']);
 } elseif( $action == 'bind' ) {

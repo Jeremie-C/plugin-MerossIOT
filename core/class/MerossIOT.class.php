@@ -33,13 +33,6 @@ class MerossIOT extends eqLogic {
         }
         log::add('MerossIOT', 'debug', __('Mise à jour des consommations terminées.', __FILE__));
     }
-    /*
-     * Fonction exécutée automatiquement par Jeedom
-     */
-    public static function cronDaily() {
-        self::deamon_stop();
-        self::deamon_start();
-    }
     /**
      * Call the meross Python daemon.
      * @param  string $action Action calling.
@@ -148,6 +141,15 @@ class MerossIOT extends eqLogic {
                         $value = __('Couleur', __FILE__);
                     } else {
                         $value = __('Blanc', __FILE__);
+                    }
+                }
+                if( $key == "spray" ) {
+                    if( $value == 1 ) {
+                        $value = __('Continu', __FILE__);
+                    } elseif( $value == 2 ) {
+                        $value = __('Intermittent', __FILE__);
+                    } else {
+                        $value = __('Arrêt', __FILE__);
                     }
                 }
                 if( $key == "rgbval" ) {
@@ -651,6 +653,28 @@ class MerossIOT extends eqLogic {
                 $cmd->setName(__('Intermittent', __FILE__));
             } else {
                 log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=spray_2');
+            }
+            $cmd->setOrder($order);
+            $cmd->save();
+            $order++;
+            # Spray information
+            $cmd = $_eqLogic->getCmd(null, 'spray');
+            if (!is_object($cmd)) {
+                log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=spray');
+                $cmd = new MerossIOTCmd();
+                $cmd->setName(__('Mode', __FILE__));
+                $cmd->setType('info');
+                $cmd->setSubType('string');
+                $cmd->setGeneric_type('GENERIC_INFO');
+                $cmd->setIsVisible(1);
+                $cmd->setIsHistorized(0);
+                $cmd->setEventOnly(1);
+                $cmd->setTemplate('dashboard', 'default');
+                $cmd->setTemplate('mobile', 'default');
+                $cmd->setLogicalId('spray');
+                $cmd->setEqLogic_id($_eqLogic->getId());
+            } else {
+                log::add('merossiot', 'debug', 'syncMeross: - Update cmd=spray');
             }
             $cmd->setOrder($order);
             $cmd->save();
