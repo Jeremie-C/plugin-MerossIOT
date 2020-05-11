@@ -88,6 +88,8 @@ class JeedomCallback:
         #HUMIDIFIER
         elif eventobj.event_type == MerossEventType.HUMIDIFIER_LIGHT_EVENT:
             self.send({'action': 'hlight', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':int(eventobj.is_on), 'rgb':int(to_rgb(eventobj.rgb)), 'luminance':eventobj.luminance})
+        elif eventobj.event_type == MerossEventType.HUMIDIFIER_SPRY_EVENT:
+            self.send({'action': 'hspray', 'uuid':eventobj.device.uuid, 'channel':eventobj.channel, 'status':int(eventobj.spry_mode.value)})
         #ADDITIONS
         elif eventobj.event_type == MerossEventType.CLIENT_CONNECTION:
             self.send({'action': 'connect', 'status':eventobj.status.value})
@@ -95,7 +97,6 @@ class JeedomCallback:
             self.send({'action': 'bind', 'uuid':eventobj.device.uuid, 'data':eventobj.bind_data})
         elif eventobj.event_type == MerossEventType.DEVICE_UNBIND:
             self.send({'action': 'unbind', 'uuid':eventobj.device.uuid})        
-        #elif eventobj.event_type == MerossEventType.HUMIDIFIER_SPRY_EVENT:
         #elif eventobj.event_type == MerossEventType.THERMOSTAT_MODE_CHANGE:
         #elif eventobj.event_type == MerossEventType.THERMOSTAT_TEMPERATURE_CHANGE:
 
@@ -153,7 +154,7 @@ class JeedomHandler(socketserver.BaseRequestHandler):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
             if str(device.__class__.__name__) == 'GenericHumidifier':
-                res = device.configure_light(luminance=lumi_int)
+                res = device.configure_light(onoff=1, luminance=lumi_int)
             else:
                 res = device.set_light_color(luminance=lumi_int)
             return res
@@ -163,10 +164,7 @@ class JeedomHandler(socketserver.BaseRequestHandler):
     def setTemp(self, uuid, temp_int, lumi=-1):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
-            if str(device.__class__.__name__) == 'GenericHumidifier':
-                res = device.configure_light(temperature=temp_int, luminance=lumi)
-            else:
-                res = device.set_light_color(temperature=temp_int, luminance=lumi)
+            res = device.set_light_color(temperature=temp_int, luminance=lumi)
             return res
         else:
             return 'Unknow device'
@@ -175,7 +173,7 @@ class JeedomHandler(socketserver.BaseRequestHandler):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
             if str(device.__class__.__name__) == 'GenericHumidifier':
-                res = device.configure_light(rgb=int(rgb_int), luminance=lumi)
+                res = device.configure_light(onoff=1, rgb=int(rgb_int), luminance=lumi)
             else:
                 res = device.set_light_color(rgb=int(rgb_int), luminance=lumi)
             return res
@@ -185,9 +183,9 @@ class JeedomHandler(socketserver.BaseRequestHandler):
     def setSpray(self, uuid, smode=0):
         device = mm.get_device_by_uuid(uuid)
         if device is not None:
-            if smode == 1:
+            if smode == '1':
                 res = device.set_spray_mode(spray_mode=SprayMode.CONTINUOUS)
-            elif smode == 2:
+            elif smode == '2':
                 res = device.set_spray_mode(spray_mode=SprayMode.INTERMITTENT)
             else:
                 res = device.set_spray_mode(spray_mode=SprayMode.OFF)
