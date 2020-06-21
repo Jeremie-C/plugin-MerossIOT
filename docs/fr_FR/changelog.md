@@ -1,3 +1,8 @@
+# 21/06/2020
+
+- Nouveau format de documentation
+- Correction issue#11
+
 # 11/05/2020
 
 - Ajout du support de l'humidificateur
