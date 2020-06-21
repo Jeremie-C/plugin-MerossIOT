@@ -378,22 +378,19 @@ def shutdown():
 
 # ----------------------------------------------------------------------------
 def syncOneElectricity(device):
-    d = dict({
-        'power': 0,
-        'current': 0,
-        'voltage':0
-    })
     # Puissance
     if device.supports_electricity_reading():
         try:
+            d = dict({'power': 0,'current': 0,'voltage':0})
             electricity = device.get_electricity()
             d['power'] = float(electricity['power'] / 1000.)
             d['current'] = float(electricity['current'] / 1000.)
             d['voltage'] = float(electricity['voltage'] / 10.)
+            return d
         except:
             pass
     # Fini
-    return d
+    return False
 
 def UpdateAllElectricity(interval):
     stopped = threading.Event()
@@ -406,8 +403,9 @@ def UpdateAllElectricity(interval):
                     device = devices[num]
                     if device.online:
                         d = syncOneElectricity(device)
-                        uuid = device.uuid
-                        e_devices[uuid] = d
+                        if isinstance(d, dict):
+                            uuid = device.uuid
+                            e_devices[uuid] = d
                 # Fin du for
                 logging.info('Send Electricity')
                 #jc.sendElectricity(e_devices)

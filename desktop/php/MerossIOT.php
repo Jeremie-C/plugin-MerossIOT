@@ -50,8 +50,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
             foreach ($eqLogics as $eqLogic) {
 				$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 				echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
-                if (file_exists(dirname(__FILE__) . '/../../docs/images/' . $eqLogic->getConfiguration('type') . '.png')) {
-                    echo '<img src="plugins/MerossIOT/docs/images/' . $eqLogic->getConfiguration('type') . '.png' . '" height="105" width="105" />';
+                if (file_exists(dirname(__FILE__) . '/../../resources/images/' . $eqLogic->getConfiguration('type') . '.png')) {
+                    echo '<img src="plugins/MerossIOT/resources/images/' . $eqLogic->getConfiguration('type') . '.png' . '" height="105" width="105" />';
                 } else {
                     echo '<img src="' . $plugin->getPathImgIcon() . '" height="105" width="95" />';
                 }

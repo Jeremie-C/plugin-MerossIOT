@@ -37,8 +37,8 @@ $eqLogics = MerossIOT::byType('MerossIOT');
     <?php
     foreach( $eqLogics as $eqLogic ) {
         $opacity = ($eqLogic->getIsEnable()) ? '' : 'opacity:0.3';
-        if( file_exists(dirname(__FILE__) . '/../../docs/images/' . $eqLogic->getConfiguration('type') . '.png')) {
-            $image = '<img src="plugins/MerossIOT/docs/images/' . $eqLogic->getConfiguration('type') . '.png" height="55" width="55" style="' . $opacity . '" />';
+        if( file_exists(dirname(__FILE__) . '/../../resources/images/' . $eqLogic->getConfiguration('type') . '.png')) {
+            $image = '<img src="plugins/MerossIOT/resources/images/' . $eqLogic->getConfiguration('type') . '.png" height="55" width="55" style="' . $opacity . '" />';
         } else {
             $image = '<img src="' . $plugin->getPathImgIcon() . '" height="55" width="55" style="' . $opacity . '" />';
         }
