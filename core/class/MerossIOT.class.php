@@ -171,47 +171,9 @@ class MerossIOT extends eqLogic {
         # Switch
         $nb_switch = count($_device['onoff']);
         foreach ($_device['onoff'] as $key=>$value) {
-            if(  $i==0 && $nb_switch>1 ) {
-                # All On
-                $cmd = $_eqLogic->getCmd(null, 'on_'.$i);
-                if (!is_object($cmd)) {
-                    log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=on_'.$i);
-                    $cmd = new MerossIOTCmd();
-                    $cmd->setType('action');
-                    $cmd->setSubType('other');
-                    $cmd->setTemplate('dashboard', 'default');
-                    $cmd->setTemplate('mobile', 'default');
-                    $cmd->setIsVisible(1);
-                    $cmd->setLogicalId('on_'.$i);
-                    $cmd->setEqLogic_id($_eqLogic->getId());
-                } else {
-                    log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=on_'.$i);
-                }
-                $cmd->setName($value.' '.__('Marche', __FILE__));
-                $cmd->setOrder($order);
-                $cmd->save();
-                $order++;
-                # All off
-                $cmd = $_eqLogic->getCmd(null, 'off_'.$i);
-                if (!is_object($cmd)) {
-                    log::add('MerossIOT', 'debug', 'syncMeross: - Add cmd=off_'.$i);
-                    $cmd = new MerossIOTCmd();
-                    $cmd->setType('action');
-                    $cmd->setSubType('other');
-                    $cmd->setTemplate('dashboard', 'default');
-                    $cmd->setTemplate('mobile', 'default');
-                    $cmd->setIsVisible(1);
-                    $cmd->setLogicalId('off_'.$i);
-                    $cmd->setEqLogic_id($_eqLogic->getId());
-                } else {
-                    log::add('MerossIOT', 'debug', 'syncMeross: - Update cmd=off_'.$i);
-                }
-                $cmd->setName($value.' '.__('Arrêt', __FILE__));
-                $cmd->setOrder($order);
-                $cmd->save();
-                $order++;
-                $i++;
-            } else {
+
+            if(  $i==0 && $nb_switch>1 ) { $allonoff = true;};
+
                 # status
                 $cmd = $_eqLogic->getCmd(null, 'onoff_'.$i);
                 if (!is_object($cmd)) {
@@ -238,6 +200,8 @@ class MerossIOT extends eqLogic {
                 $cmd->save();
                 $status_id = $cmd->getId();
                 $order++;
+
+
                 # off
                 $cmd = $_eqLogic->getCmd(null, 'off_'.$i);
                 if (!is_object($cmd)) {
@@ -270,6 +234,7 @@ class MerossIOT extends eqLogic {
                 $cmd->setValue($status_id);
                 $cmd->save();
                 $order++;
+
                 # on
                 $cmd = $_eqLogic->getCmd(null, 'on_'.$i);
                 if (!is_object($cmd)) {
@@ -302,8 +267,8 @@ class MerossIOT extends eqLogic {
                 $cmd->setValue($status_id);
                 $cmd->save();
                 $order++;
+
                 $i++;
-            }
         }
         # Refresh
         $cmd = $_eqLogic->getCmd(null, 'refresh');
